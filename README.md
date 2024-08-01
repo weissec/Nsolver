@@ -8,4 +8,5 @@ DNS CNAME Records
 SSL Certificate CN
 
 ## Upcoming Changes:
-The tool will be expanded to include an initial subdomain enumeration. 
+- The tool will be expanded to include an initial subdomain enumeration.
+- Better layout and more information printed on screen.
