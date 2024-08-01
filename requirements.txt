@@ -1,0 +1,6 @@
+dnspython==2.0.0
+ipwhois==1.2.0
+python-dateutil==2.9.0.post0
+python-whois==0.9.4
+six==1.16.0
+tqdm==4.66.4
