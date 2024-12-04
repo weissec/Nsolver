@@ -5,6 +5,7 @@ Given a list of domains and subdomanis, the tool extracts and presents the follo
 - DNS A Records
 - DNS AAAA Records
 - DNS CNAME Records
+- Registrar
 - SSL Certificate CN
 
 ### Upcoming Changes:
