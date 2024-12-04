@@ -52,6 +52,7 @@ def get_ssl_cn(domain):
         return None, str(e)
 
 def process_domain(domain):
+   
     a_record, a_error = get_a_record(domain)
     aaaa_record, aaaa_error = get_aaaa_record(domain)
     cname_record, cname_error = get_cname_record(domain)
@@ -69,12 +70,12 @@ def process_domain(domain):
         ssl_cn = 'N/A'  # If there's an SSL error, set CN to 'N/A'
     
     return {
-        'domain': domain,
-        'a_record': ','.join(a_record) if a_record else 'N/A',
-        'aaaa_record': ','.join(aaaa_record) if aaaa_record else 'N/A',
-        'cname_record': ','.join(cname_record) if cname_record else 'N/A',
-        'ip_owners': ','.join(ip_owners) if ip_owners else 'N/A',
-        'ssl_cn': ssl_cn
+        'Domain': domain,
+        'A Record': ','.join(a_record) if a_record else 'N/A',
+        'AAAA Record': ','.join(aaaa_record) if aaaa_record else 'N/A',
+        'CNAME Record': ','.join(cname_record) if cname_record else 'N/A',
+        'IP Owner': ','.join(ip_owners) if ip_owners else 'N/A',
+        'SSL CN': ssl_cn
     }
     
 def banner():
@@ -82,7 +83,7 @@ def banner():
  _ __  ___  ___ | |_   _____ _ __ 
 | '_ \/ __|/ _ \| \ \ / / _ \ '__|
 | | | \__ \ (_) | |\ V /  __/ |   
-|_| |_|___/\___/|_| \_/ \___|_|  
+|_| |_|___/\___/|_| \_/ \___|_| W315
  
  """
     print(font)    
@@ -90,6 +91,8 @@ def banner():
 def main(input_file, output_file):
     with open(input_file, 'r') as infile:
         domains = [line.strip() for line in infile]
+        
+        print('# Found: ' + str(len(domains)) + ' domain(s)/subdomain(s).\n')
 
     results = []
     for domain in tqdm(domains, desc="Progress"):
@@ -98,17 +101,19 @@ def main(input_file, output_file):
             results.append(result)
 
     with open(output_file, 'w', newline='') as csvfile:
-        fieldnames = ['domain', 'a_record', 'aaaa_record', 'cname_record', 'ip_owners', 'ssl_cn']
+        fieldnames = ['Domain', 'A Record', 'AAAA Record', 'CNAME Record', 'IP Owner', 'SSL CN']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         
         writer.writeheader()
         for result in results:
             writer.writerow(result)
+            
+        print('\n# Finished processing domains. Results saved in CSV file: ' + str(output_file))
 
 if __name__ == "__main__":
     banner()
     parser = argparse.ArgumentParser(
-        description="This script processes domains to find DNS A records, AAAA records, CNAME records, IP ownership, and SSL certificate Common Names (CN).",
+        description="This script processes domains/subdomains to find DNS A records, AAAA records, CNAME records, IP ownership, and SSL certificate Common Names (CN).",
         formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument('-i', '--input_file', type=str, required=True, help='Input file containing list of domains')
