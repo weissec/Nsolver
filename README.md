@@ -1,4 +1,4 @@
-# nsolver
+# Nsolver
 OSINT tool that can be used to retrieve information from a list of domains/subdomains. Useful to determine the ownership of public assets. 
 
 Given a list of domains and subdomanis, the tool extracts and presents the following information in a CSV file:
