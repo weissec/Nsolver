@@ -7,17 +7,17 @@ Given a list of domains and subdomanis, the tool extracts and presents the follo
 - DNS CNAME Records
 - SSL Certificate CN
 
-## Upcoming Changes:
+### Upcoming Changes:
 - The tool will be expanded to include an initial subdomain enumeration.
 - Better layout and more information printed on screen.
 
-## Usage:
+### Usage:
 ```
 pip install -r requirements.txt
 python3 nsolver.py [-h] -i INPUT_FILE -o OUTPUT_FILE.csv
 ```
 
-## Example Output:
+### Example Output:
 
 | Domain | A Record | AAAA Record | CNAME Record | IP Owners | SSL CN |
 | -------- | ------- | ------- | ------- | ------- | ------- |
