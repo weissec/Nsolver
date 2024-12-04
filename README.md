@@ -12,10 +12,10 @@ Given a list of domains and subdomanis, the tool extracts and presents the follo
 - Better layout and more information printed on screen.
 
 ## Usage:
-'''
+```sh
 pip install -r requirements.txt
 python3 nsolver.py [-h] -i INPUT_FILE -o OUTPUT_FILE.csv
-'''
+```
 
 ## Example Output:
 
