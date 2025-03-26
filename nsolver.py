@@ -81,12 +81,12 @@ def process_domain(domain):
 def banner():
     font = """                 _                
  _ __  ___  ___ | |_   _____ _ __ 
-| '_ \/ __|/ _ \| \ \ / / _ \ '__|
-| | | \__ \ (_) | |\ V /  __/ |   
-|_| |_|___/\___/|_| \_/ \___|_| W315
+| '_ \\/ __|/ _ \\| \\ \\ / / _ \\ '__|
+| | | \\__ \\ (_) | |\\ V /  __/ |   
+|_| |_|___/\\___/|_| \\_/ \\___|_| W315
  
  """
-    print(font)    
+    print(font)   
 
 def main(input_file, output_file):
     with open(input_file, 'r') as infile:
