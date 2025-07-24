@@ -7,10 +7,11 @@ Given a list of domains and subdomanis, the tool extracts and presents the follo
 - DNS CNAME Records
 - Registrar
 - SSL Certificate CN
+- Live Status (HTTP/HTTPS Check)
 
 ### Upcoming Changes:
 - The tool will be expanded to include an initial subdomain enumeration.
-- Better layout and more information printed on screen.
+- Better layout and more information in terminal.
 
 ### Usage:
 ```
@@ -20,7 +21,7 @@ python3 nsolver.py [-h] -i INPUT_FILE -o OUTPUT_FILE.csv
 
 ### Example Output:
 
-| Domain | A Record | AAAA Record | CNAME Record | IP Owners | SSL CN |
-| -------- | ------- | ------- | ------- | ------- | ------- |
-| www.google.com | 172.217.16.228 | 2a00:1450:4009:821::2004 | N/A | GOOGLE | www.google.com |
+| Domain | A Record | AAAA Record | CNAME Record | IP Owners | SSL CN | Live |
+| -------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| www.google.com | 172.217.16.228 | 2a00:1450:4009:821::2004 | N/A | GOOGLE | www.google.com | Live (200) |
 
