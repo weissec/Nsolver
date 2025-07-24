@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # NSolver, 2024, W3155
+# Retrieve DNS records from a list of domains/subdomains.
 
 import csv
 import argparse
@@ -10,6 +11,10 @@ from ipwhois import IPWhois
 import ssl
 import socket
 from tqdm import tqdm
+import urllib3
+import requests
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_a_record(domain):
     try:
@@ -50,9 +55,23 @@ def get_ssl_cn(domain):
                 return subject.get('commonName', 'N/A'), None
     except Exception as e:
         return None, str(e)
+        
+def is_domain_live(domain):
+    try:
+        # Try HTTPS first
+        response = requests.get(f"https://{domain}", timeout=5, verify=False, allow_redirects=True)
+        return f"Live ({response.status_code})", None
+    except requests.exceptions.SSLError:
+        # If SSL fails, try HTTP
+        try:
+            response = requests.get(f"http://{domain}", timeout=5, allow_redirects=True)
+            return f"Live ({response.status_code})", None
+        except Exception as e:
+            return "Not Live", str(e)
+    except Exception as e:
+        return "Not Live", str(e)
 
 def process_domain(domain):
-   
     a_record, a_error = get_a_record(domain)
     aaaa_record, aaaa_error = get_aaaa_record(domain)
     cname_record, cname_error = get_cname_record(domain)
@@ -60,22 +79,22 @@ def process_domain(domain):
     ip_owners = []
     for ip in a_record:
         owner, ip_error = get_ip_owner(ip)
-        if ip_error:
-            ip_owners.append('N/A')  # If there's an IP ownership lookup error, add 'N/A'
-        else:
-            ip_owners.append(owner)
+        ip_owners.append(owner if not ip_error else 'N/A')
 
     ssl_cn, ssl_error = get_ssl_cn(domain)
     if ssl_error:
-        ssl_cn = 'N/A'  # If there's an SSL error, set CN to 'N/A'
-    
+        ssl_cn = 'N/A'
+
+    live_status, _ = is_domain_live(domain)
+
     return {
         'Domain': domain,
         'A Record': ','.join(a_record) if a_record else 'N/A',
         'AAAA Record': ','.join(aaaa_record) if aaaa_record else 'N/A',
         'CNAME Record': ','.join(cname_record) if cname_record else 'N/A',
         'IP Owner': ','.join(ip_owners) if ip_owners else 'N/A',
-        'SSL CN': ssl_cn
+        'SSL CN': ssl_cn,
+        'Live': live_status
     }
     
 def banner():
@@ -92,7 +111,7 @@ def main(input_file, output_file):
     with open(input_file, 'r') as infile:
         domains = [line.strip() for line in infile]
         
-        print('# Found: ' + str(len(domains)) + ' domain(s)/subdomain(s).\n')
+        print('Found: ' + str(len(domains)) + ' domain(s)/subdomain(s).\n')
 
     results = []
     for domain in tqdm(domains, desc="Progress"):
@@ -101,14 +120,14 @@ def main(input_file, output_file):
             results.append(result)
 
     with open(output_file, 'w', newline='') as csvfile:
-        fieldnames = ['Domain', 'A Record', 'AAAA Record', 'CNAME Record', 'IP Owner', 'SSL CN']
+        fieldnames = ['Domain', 'A Record', 'AAAA Record', 'CNAME Record', 'IP Owner', 'SSL CN', 'Live']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         
         writer.writeheader()
         for result in results:
             writer.writerow(result)
             
-        print('\n# Finished processing domains. Results saved in CSV file: ' + str(output_file))
+        print('\nFinished processing domains. Results saved in CSV file: ' + str(output_file))
 
 if __name__ == "__main__":
     banner()

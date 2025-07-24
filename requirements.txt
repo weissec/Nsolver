@@ -1,6 +1,11 @@
+certifi==2025.7.14
+charset-normalizer==3.4.2
 dnspython==2.0.0
+idna==3.10
 ipwhois==1.2.0
 python-dateutil==2.9.0.post0
 python-whois==0.9.4
+requests==2.32.4
 six==1.16.0
 tqdm==4.66.4
+urllib3==2.5.0
